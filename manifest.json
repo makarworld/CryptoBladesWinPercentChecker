@@ -1,0 +1,20 @@
+{
+  "manifest_version": 2,
+  "name": "CryptoBlades win% checker by abuztrade",
+  "version": "1.0.0",
+  "background": {
+    "scripts": [
+      "background.js"
+    ]
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://app.cryptoblades.io/*"
+      ],
+      "js": [
+        "jquery-3.5.1.min.js", "content.js"
+      ]
+    }
+  ]
+}

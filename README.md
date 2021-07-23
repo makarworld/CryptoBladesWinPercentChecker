@@ -11,6 +11,7 @@
 4. Нажать на кнопку "Show win %"
 
 Донатик WAX: abuztradewax
+
 Донатик BSC: 0x7c6648BC2a56d751095F229A6e50E0Ea9c9E78b5
 
 *! Если страница криптоблядей не загружается выключите и включите расширение
@@ -28,6 +29,7 @@ Usage:
 4. Click on the "Show win" button %".
 
 Donate WAX: abuztradewax
+
 Donate BSC: 0x7c6648BC2a56d751095F229A6e50E0Ea9c9E78b5
 
 *! If the CryptoBlades page does not load, turn off and enable the extension.

@@ -6,7 +6,7 @@
 
 console.log("[abuztrade] Script started! Wait loading page...")
 
-window.onload = function() {
+window.onload = setTimeout(() => {
     const earthTrait = 0;
     const ligthingTrait = 1;
     const waterTrait = 2;
@@ -262,7 +262,7 @@ window.onload = function() {
         max = Math.floor(max);
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
-};
+}, 10000);
 
 
 

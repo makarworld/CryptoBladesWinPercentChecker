@@ -1,4 +1,5 @@
 #RU
+
 Установка:
 1. Загрузить архив с гитхаба, распаковать.
 2. Зайти в расширение и установить как распакованное расширение.
@@ -15,6 +16,7 @@
 *! Если страница криптоблядей не загружается выключите и включите расширение
 
 #EN
+
 Installation:
 1. Download the archive from github, unpack it.
 2. Go to the extension and install it as an unpacked extension.

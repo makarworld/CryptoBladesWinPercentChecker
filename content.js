@@ -104,7 +104,12 @@ window.onload = setTimeout(() => {
             enemies[1].querySelector('h1').innerText = 'Win ' + chances[1]
             enemies[2].querySelector('h1').innerText = 'Win ' + chances[2]
             enemies[3].querySelector('h1').innerText = 'Win ' + chances[3]
-            
+
+            enemies[0].querySelector('button').addEventListener('click', () => {clearPercents(enemies)})
+            enemies[1].querySelector('button').addEventListener('click', () => {clearPercents(enemies)})
+            enemies[2].querySelector('button').addEventListener('click', () => {clearPercents(enemies)})
+            enemies[3].querySelector('button').addEventListener('click', () => {clearPercents(enemies)})
+
         } catch (err) {
             printError('Error in parsing inputs');
             console.log(err)
@@ -118,6 +123,14 @@ window.onload = setTimeout(() => {
         } else {
             throw "Not number";
         }
+    }
+
+    function clearPercents(enemies) {
+        console.log('clear');
+        enemies[0].querySelector('h1').innerText = 'Fight!';
+        enemies[1].querySelector('h1').innerText = 'Fight!';
+        enemies[2].querySelector('h1').innerText = 'Fight!';
+        enemies[3].querySelector('h1').innerText = 'Fight!';
     }
 
     function checkElement(elem) {

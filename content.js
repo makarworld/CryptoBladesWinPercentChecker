@@ -12,6 +12,11 @@ window.onload = setTimeout(() => {
     const waterTrait = 2;
     const fireTrait = 3;
     const powerTrait = 4;
+    clear1 = null
+    clear2 = null
+    clear3 = null
+    clear4 = null
+
 
     var butElement = document.createElement('button')
     butElement.className = "abuztrade-fight"
@@ -105,10 +110,10 @@ window.onload = setTimeout(() => {
             enemies[2].querySelector('h1').innerText = 'Win ' + chances[2]
             enemies[3].querySelector('h1').innerText = 'Win ' + chances[3]
 
-            enemies[0].querySelector('button').addEventListener('click', () => {clearPercents(enemies)})
-            enemies[1].querySelector('button').addEventListener('click', () => {clearPercents(enemies)})
-            enemies[2].querySelector('button').addEventListener('click', () => {clearPercents(enemies)})
-            enemies[3].querySelector('button').addEventListener('click', () => {clearPercents(enemies)})
+            if (clear1 == null) { clear1 = true; enemies[0].querySelector('button').addEventListener('click', () => {clearPercents(enemies)});}
+            if (clear2 == null) { clear2 = true; enemies[1].querySelector('button').addEventListener('click', () => {clearPercents(enemies)});}
+            if (clear3 == null) { clear3 = true; enemies[2].querySelector('button').addEventListener('click', () => {clearPercents(enemies)});}
+            if (clear4 == null) { clear4 = true; enemies[3].querySelector('button').addEventListener('click', () => {clearPercents(enemies)});}
 
         } catch (err) {
             printError('Error in parsing inputs');

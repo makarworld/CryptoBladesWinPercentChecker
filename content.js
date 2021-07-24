@@ -1,268 +1,309 @@
 // content.js
+var win_ = window;
+if(localStorage.getItem("ch1") == null) {
+    localStorage.setItem("ch1", 0)
+}
 
-// Основа взята с сайта: https://wax-dapps.site/crypto-blades/combat
-// Создатель: https://vk.com/abuz.trade 
-// Группа создателя: https://vk.com/lowbank.trade 
+const OPEN_NEW_WINDOW = false;
+// Код для оптимизации времени на аккаунт
+//localStorage.setItem("ch", '{"posts": []}')
 
-console.log("[abuztrade] Script started! Wait loading page...")
+//function add_post(name, time, time_wait) {
+//  let lastItem = JSON.parse(localStorage.getItem("ch"))
+//  dict = {"name": name, "time": time, "wait": time_wait}
+//  lastItem.posts.push(dict)
+//  localStorage.setItem("ch", JSON.stringify(lastItem))
+//}
 
-window.onload = setTimeout(() => {
-    const earthTrait = 0;
-    const ligthingTrait = 1;
-    const waterTrait = 2;
-    const fireTrait = 3;
-    const powerTrait = 4;
+//function remove_post(name) {
+//  let lastItem = JSON.parse(localStorage.getItem("ch"))
+//  for (let i = 0; i++; lastItem.posts.length < i) {
+//    if(lastItem.posts[i].name == name) {lastItem.posts.splice(i); break;}
+//  };
+//};
 
-    var butElement = document.createElement('button')
-    butElement.className = "abuztrade-fight"
-    butElement.innerHTML = '<div class="name-list" data-v-69ae70f6="">Show win %</div>'
-    butElement.style = "font-size: 1.5em;"
-    while (document.querySelector('ul[class="character-list"]') == null) {}
-    document.querySelector('ul[class="character-list"]').append(butElement)
-    console.log('append')
+//function get_posts() {
+//  return JSON.parse(localStorage.getItem("ch"))
+//};
 
-    var errElement = document.createElement('div')
-    errElement.className = 'abuztrade-error'
-    errElement.innerHTML = '<span class="name-list" data-v-69ae70f6=""></span>'
-    errElement.style = "color: #40E0D0; font-family: serif;"
-    while (document.querySelector('img[class="info-divider"]') == null) {}
-    document.querySelector('img[class="info-divider"]').after(errElement)
-    console.log('after')
+//console.log(get_posts())
+//add_post("nn", 1, 1)
+//console.log(get_posts())
+//remove_post("nn")
+//console.log(get_posts())
 
-    var inpElement = document.createElement('abuztrade')
-    inpElement.innerHTML = '<div style="font-weight: 400;font-size: 1.25em;height: 2px;padding: 9px 2px;border-radius: 5px;" class="name-list" data-v-69ae70f6=""><span>Bonus power: </span><input id="abuztrade-bonus-power" type="number"></input></div>'
-    while (document.querySelector('ul[class="character-list"]') == null) {}
-    document.querySelector('ul[class="character-list"]').append(inpElement)
 
-    document.querySelector('button[class="abuztrade-fight"]').addEventListener("click", function () {
-        console.log('click')
-        if (document.URL != "https://app.cryptoblades.io/#/combat") { 
-            printError('Open https://app.cryptoblades.io/#/combat for use script')
-            return
-        }
-        try {
-            // get trait hero in string, convert to int
-            let heroTraitStr = document.querySelectorAll('span[data-v-69ae70f6]')[1].className.replace('-icon trait-icon', '')
-            var heroTrait = checkElement(heroTraitStr)
 
-            // get weapon div, get all stats
-            let weapon = document.querySelector('div[class="weapon-icon weapon-icon has-tooltip"]')
-            let stats = weapon.querySelector('div[class="stats"]').querySelectorAll('span')
-
-            // trait of weapon
-            let weaponTrait = checkElement(weapon.querySelector('span').className.replace('-icon', ''))
-            // stats
-            if (stats.length == 2) {
-                var stat1Trait = checkElement(stats[0].className.replace('mr-1 ', '').replace('-icon', '').replace('icon ', ''))
-                var stat2Trait = 0
-                var stat3Trait = 0
-                var stat1 = stats[1].innerText.replace(/\D+/, '')
-                var stat2 = 0
-                var stat3 = 0
-            } else if (stats.length == 4) {
-                var stat1Trait = checkElement(stats[0].className.replace('mr-1 ', '').replace('-icon', '').replace('icon ', ''))
-                var stat2Trait = checkElement(stats[2].className.replace('mr-1 ', '').replace('-icon', '').replace('icon ', ''))
-                var stat3Trait = 0
-                var stat1 = stats[1].innerText.replace(/\D+/, '')
-                var stat2 = stats[3].innerText.replace(/\D+/, '')
-                var stat3 = 0
-            } else if (stats.length == 6) {
-                var stat1Trait = checkElement(stats[0].className.replace('mr-1 ', '').replace('-icon', '').replace('icon ', ''))
-                var stat2Trait = checkElement(stats[2].className.replace('mr-1 ', '').replace('-icon', '').replace('icon ', ''))
-                var stat3Trait = checkElement(stats[4].className.replace('mr-1 ', '').replace('-icon', '').replace('icon ', ''))
-                var stat1 = stats[1].innerText.replace(/\D+/, '')
-                var stat2 = stats[3].innerText.replace(/\D+/, '')
-                var stat3 = stats[5].innerText.replace(/\D+/, '')
+// YOBIT //
+if(document.URL.includes("yobit.net/ru/cryptotalk/") || document.URL.includes("yobit.net/ru/paybyposts/")) {
+  // Обработка ошибки при отправке хуйни
+  function doAffSig4SendEarnedToBalance()
+  {
+    var csrf_token = $('#csrf_token').val();
+    $.ajax({
+        url: '/ajax/system_affiliate_signature4.php', cache: !1, type: 'POST',
+        data: {action:'send_earned_to_balance', csrf_token:csrf_token},
+        dataType: 'json',
+        success: function(data)
+        {
+            if(data.result == "OK")
+            {
+              window.location.reload();
             }
-            // enemies list
-            var enemies = document.querySelectorAll('div[class="encounter-container"]');
-            
-            // penemy trait
-            let enemy1Trait = checkElement(enemies[0].className.replace('-icon trait-icon', ''));
-            let enemy2Trait = checkElement(enemies[1].className.replace('-icon trait-icon', ''));
-            let enemy3Trait = checkElement(enemies[2].className.replace('-icon trait-icon', ''));
-            let enemy4Trait = checkElement(enemies[3].className.replace('-icon trait-icon', ''));
-
-            // hero power
-            let heroPower = validateInput(document.querySelectorAll('span[data-v-69ae70f6]')[4].innerText.replace(/\D+/, ''));
-            // bonus power
-            var weaponPower = document.querySelector('input[id="abuztrade-bonus-power"]').value;
-            if (weaponPower == "") { 
-                weaponPower = 0;
-            } else {
-                weaponPower = parseFloat(weaponPower);
+            else //if(data.error == 1)
+            {
+              message = '{"error": '+data.error+', "error_log: '+data.error_log+'}'
+              if (document.querySelector('div[class="claim-info"]') == null) {
+                // Вставка нового элемента
+                let b = document.querySelector('input[onclick="doAffSig4SendEarnedToBalance();"]')
+                b.insertAdjacentHTML('afterEnd', '<div class="claim-info">' + message + '</div>');
+              } else {
+                // Смена текста.
+                document.querySelector('div[class="claim-info"]').textContent = message;
+              }
             }
-
-            let enemy1 = validateInput(enemies[0].querySelector('div[class="encounter-power"]').innerText.replace(' Power', ''));
-            let enemy2 = validateInput(enemies[1].querySelector('div[class="encounter-power"]').innerText.replace(' Power', ''));
-            let enemy3 = validateInput(enemies[2].querySelector('div[class="encounter-power"]').innerText.replace(' Power', ''));
-            let enemy4 = validateInput(enemies[3].querySelector('div[class="encounter-power"]').innerText.replace(' Power', ''));
-            // print all data for debug
-            console.log(heroPower, heroTrait, weaponPower, weaponTrait, stat1, stat1Trait, stat2, stat2Trait, stat3, stat3Trait, enemy1, enemy1Trait, enemy2, enemy2Trait, enemy3, enemy3Trait, enemy4, enemy4Trait)
-            chances = fight(heroPower, heroTrait, weaponPower, weaponTrait, stat1, stat1Trait, stat2, stat2Trait, stat3, stat3Trait, enemy1, enemy1Trait, enemy2, enemy2Trait, enemy3, enemy3Trait, enemy4, enemy4Trait);
-            enemies[0].querySelector('h1').innerText = 'Win ' + chances[0]
-            enemies[1].querySelector('h1').innerText = 'Win ' + chances[1]
-            enemies[2].querySelector('h1').innerText = 'Win ' + chances[2]
-            enemies[3].querySelector('h1').innerText = 'Win ' + chances[3]
-            
-        } catch (err) {
-            printError('Error in parsing inputs');
-            console.log(err)
+        },
+        error: function()
+        {
         }
-    });
+      });
+  }
 
-    function validateInput(input) {
-        let num = input;
-        if (!isNaN(parseFloat(num)) && isFinite(num)) {
-            return parseFloat(num);
-        } else {
-            throw "Not number";
+
+
+
+
+
+  document.querySelector('span[class="red"]').textContent = "" // убрать лишний 0
+  let urlParams = new URLSearchParams(window.location.search);
+  let posts = parseInt(urlParams.get('posts'));
+  if (isNaN(posts) == false) {
+    let timestamp = parseInt(urlParams.get('timestamp'));
+    let p_posts = parseInt(document.querySelectorAll('span[style="color:#0aadef"]')[1].innerText)
+    let p__posts = p_posts + posts
+
+    let now_ts = Math.floor(Date.now() / 1000)
+    let raz = parseInt((now_ts - timestamp) / 180)
+    if((posts*3) - raz > 0) {
+      var time_post = (posts*3) - raz
+      p__posts = p__posts - parseInt(raz/3)
+    } else {
+      var time_post = 0
+      p__posts = 0
+    }
+
+    document.querySelectorAll('span[style="color:#0aadef"]')[1].innerText = p_posts + " + ["+p__posts+"] (~"+time_post+" мин.)"
+
+    let table = document.querySelectorAll('table[class="big_table big_table_top dataTable no-footer"]')[1]
+    let last_posts = table.querySelectorAll('td')[1].innerText
+    let plus_posts = parseInt(last_posts) + parseInt(posts)
+    table.querySelectorAll('td')[1].innerText = '['+plus_posts+']'+last_posts
+
+  }
+}
+// YOBIT //
+
+
+function add_post() {
+  let lastItem = parseInt(localStorage.getItem("ch1"))
+  localStorage.setItem("ch1", lastItem+1)
+}
+function remove_post() {
+  let lastItem = parseInt(localStorage.getItem("ch1"))
+  localStorage.setItem("ch1", lastItem-1)
+};
+function get_posts() {
+  return parseInt(localStorage.getItem("ch1"))
+};
+
+// Обработка параметров 
+if(document.URL.includes("cryptotalk.org")) {
+  let urlParams = new URLSearchParams(window.location.search);
+  let send = parseInt(urlParams.get('send'));
+  if (isNaN(send) == false) {
+    setTimeout(() => { document.querySelector('button[class="ipsButton ipsButton_primary"]').click(); }, 5000);
+  };
+};
+// Отбработка закончена!!
+
+
+
+
+
+
+
+// CRYPTOTALK //
+
+var button_minus = "<button type=\"button\" class=\"minus-button\" data-quantity=\"minus\" data-field=\"quantity\" onclick=\"localStorage.setItem('ch1', parseInt(localStorage.getItem('ch1'))-1); document.querySelector('span[class=\'by-text\'].innerText = 'В процессе отправки '+parseInt(localStorage.getItem('ch1'))+' постов (~'+3*parseInt(localStorage.getItem('ch1'))+' мин.)')\"><i class=\"fa fa-minus\" aria-hidden=\"true\"></i></button>"
+var button_plus = "<button type=\"button\" class=\"plus-button\" data-quantity=\"plus\" data-field=\"quantity\" onclick=\"localStorage.setItem('ch1', parseInt(localStorage.getItem('ch1'))+1); document.querySelector('span[class=\'by-text\'].innerText = 'В процессе отправки '+parseInt(localStorage.getItem('ch1'))+' постов (~'+3*parseInt(localStorage.getItem('ch1'))+' мин.)')\"><i class=\"fa fa-plus\" aria-hidden=\"true\"></i></button>"
+
+var button_yobit = "<button class=\"Yo\" onclick=\"window.open('https://yobit.net/ru/cryptotalk/?posts='+localStorage.getItem('ch1')+'&timestamp='+Math.floor(Date.now() / 1000), '_about');\">Yobit</button>"
+
+let posts_count = get_posts()
+var by_text = "<span class=\"by-text\" style=\"color: #34c0eb; font-size: 20px; font-weight: bold; margin-right: 20px; text-shadow: 1px 0 0 #656bad, -1px 0 0 #656bad, 0 1px 0 #656bad, 0 -1px 0 #656bad, 1px 1px #656bad, -1px -1px 0 #656bad, 1px -1px 0 #656bad, -1px 1px 0 #656badb;\">В процессе отправки "+posts_count+" постов (~"+posts_count*3+" мин.)</span>"
+if(win_.document.URL.includes("cryptotalk.org")) {
+  win_.document.querySelector('div[class="focus-nav"]').insertAdjacentHTML('AfterEnd', by_text);
+  win_.document.querySelector('span[class="by-text"]').insertAdjacentHTML('AfterEnd', button_yobit);
+}
+//win_.document.querySelector('span[class="by-text"]').insertAdjacentHTML('AfterEnd', button_minus);
+//win_.document.querySelector('button[class="minus-button"]').insertAdjacentHTML('AfterEnd', button_plus);
+
+var button_down = "<button name=\"button-down\" onclick=\"document.getElementById('replyForm').scrollIntoView();\">Пролистать вниз</button>"
+var button_up = "<button name=\"button-up\" style=\"width: 200px; margin-top: 5px; margin-left: 36%;\" onclick=\"document.getElementById('cUserLink').scrollIntoView();\">Пролистать вверх</button>"
+
+if (win_.document.URL.includes("topic")) {
+  win_.document.querySelector('button[class="Yo"]').insertAdjacentHTML('AfterEnd', button_down);
+  win_.document.getElementById('replyForm').insertAdjacentHTML('AfterEnd', button_up);
+}
+
+
+
+// text settings
+var ERROR_TEXT = "{ color: red; font-size: 25px; font-weight: bold; }";
+var INFO_TEXT = "{ color: #DA621A; font-size: 25px; font-weight: bold; }";
+var SUCCESS_TEXT = "{ color: green; font-size: 40px; font-weight: bold; }";
+var MSGS_INFO = "{ color: #e649e3; font-size: 14px; font-weight: bold; }";
+win_.document.body.insertAdjacentHTML('beforeEnd', '<style class="abuztrade-style">.text-information-by-abuztrade'+INFO_TEXT+' .error-info'+ERROR_TEXT+' .success-info'+SUCCESS_TEXT+' .msgs-info'+MSGS_INFO+'</style>');
+
+var NOTICE = true;
+var SET180 = true;
+
+// Вставка [НЕ ОПЛАЧИВАЕТСЯ] в неоплачивыемые топики (оффтопик, баунти) 
+if (win_.document.URL == "https://cryptotalk.org/") {
+  var threads = win_.document.querySelectorAll('h4[class="ipsDataItem_title ipsType_large ipsType_break"]')
+  threads[4].innerHTML = threads[4].innerHTML.replace('Bounties', 'Bounties [НЕ ОПЛАЧИВАЕТСЯ]')
+  threads[18].innerHTML = threads[18].innerHTML.replace('Off Topic', 'Off Topic [НЕ ОПЛАЧИВАЕТСЯ]')
+  threads[23].innerHTML = threads[23].innerHTML.replace('Баунти кампании', 'Баунти кампании [НЕ ОПЛАЧИВАЕТСЯ]')
+  threads[38].innerHTML = threads[38].innerHTML.replace('Оффтопик', 'Оффтопик [НЕ ОПЛАЧИВАЕТСЯ]')
+}
+
+// Классы поста, чтобы находить его на странице
+var post_classes = "cke_wysiwyg_div cke_reset cke_enable_context_menu cke_editable cke_editable_themed cke_contents_ltr"
+
+// info element
+// var text_info = win_.document.querySelector('label[for="check_auto_follow_toggle"]');
+var text_info = win_.document.querySelector('div[class="ipsGrid ipsGrid_collapsePhone ipsPager ipsClearfix ipsSpacer_top ipsContained"]');
+
+// error element
+var error_info = win_.document.querySelector('div[data-role="replyArea"]'); 
+// Подсчет текста
+function text_infomation() {
+
+  // Достаем текст из поста, удаляя блоки с quote.
+  var my_post = win_.document.getElementsByClassName(post_classes)
+  if (my_post.length >= 1) {
+    my_post = my_post[0].innerHTML.replace(/<div[\S\W\D]+div>/g, '').replace(/<[/\w]+>/g, '').replace(/&nbsp;/g, ' ').replace(/<[\W\S\D]+>/g, ')');
+  } else {
+    return
+  }
+
+  // Формируем сообщение.
+  var message = " Длина поста " + my_post.length + " word. Без пробелов: " + my_post.replace(/[\s]+/g, '').length + "";
+  if (my_post.length % 10 == 1) { message = message.replace("word", "символ") } else if ([2,3,4].indexOf( my_post.length % 10 ) != -1) { message = message.replace("word", "символа") } else { message = message.replace("word", "символов")}
+  
+
+  // Если элемент есть, то заменяем текст, если нет, создаем.
+  if (win_.document.querySelector('span[class="text-information-by-abuztrade"]') == null) {
+    // Вставка нового элемента
+    text_info.insertAdjacentHTML('beforeBegin', '<h1><span class="text-information-by-abuztrade">' + message + '</span></h1>');
+  } else {
+    // Смена текста.
+    win_.document.querySelector('span[class="text-information-by-abuztrade"]').textContent = message;
+  }
+}
+
+
+// Запускаем код 1 раз
+setTimeout(text_infomation(), 0);
+
+
+// При нажатии на любую кнопку внутри поста, будет срабатывать функция
+win_.document.body.addEventListener('keyup', event => {
+  if (event.target.className != post_classes) {
+    return
+  }
+  setTimeout(text_infomation(), 0);
+});
+
+
+// Код для отправки сообщения 
+elem = win_.document.querySelector('button[class="ipsButton ipsButton_primary"]')
+if(elem != null) {
+  elem.onclick = function() {
+    setTimeout(() => { check_error(); text_infomation();}, 7000);
+    error_info.insertAdjacentHTML('beforeBegin', '<h2><span class="error-info">Ожидание 7 секунд перед проверкой ошибок...</span></h2>'); win_.document.title = 'Проверка';
+  };
+};
+
+function check_error() {
+  // если поле с ошибкой не существует, то ниче не делать
+  try {
+    error = win_.document.querySelector('div[data-role="commentFormError"]').innerText
+      
+  } catch(er) {
+    error_info.insertAdjacentHTML('beforeBegin', '<h2><span class="neitral-info">Текст отправлен без ошибок.</span></h2>');
+    
+    setTimeout(() => { win_.document.querySelector('span[class="neitral-info"]').remove(); }, 5000)
+
+    win_.document.querySelector('span[class="error-info"]').remove()
+    
+    console.log("Текст отправлен без ошибок.")
+
+    return
+  }
+
+  // Если ошибка != ошибке пустого поля
+  if (error != "This field is required.") {
+    // seconds = Количество секунд ожидания
+    var urlParams = new URLSearchParams(window.location.search);
+    var send = parseInt(urlParams.get('send'));
+    if (isNaN(send) && OPEN_NEW_WINDOW == true) {
+      win_.open(win_.location+'?send=1', '_about')
+    } else {
+
+      if (SET180 == true) {
+        seconds = 186 // + 180*get_posts()
+      } else {
+        seconds = error.replace(/\D+/g, "")
+        seconds = parseInt(seconds)
+        seconds = seconds.toString()
+      }
+      add_post()
+      
+      //**************** Таймер ****************
+      msg = 'Попытка повторно отправить сообщение через ' + (parseInt(seconds) - 6) + ' сек.'
+      
+      // Если элемент есть, то заменяем текст, если нет, создаем.
+      if (win_.document.querySelector('span[class="error-info"]') == null) {
+        // Вставка нового элемента
+        error_info.insertAdjacentHTML('beforeBegin', '<h2><span class="error-info">' + msg + '</span></h2>');
+
+          } else {
+        // Смена текста.
+        win_.document.querySelector('span[class="error-info"]').textContent = msg;
+
+      }
+      setTimeout(() => { 
+        sl = 0 
+        for (let i = (parseInt(seconds) - 7); i > 0; i--) {                         
+          setTimeout(() => { win_.document.querySelector('span[class="error-info"]').textContent = 'Попытка повторно отправить сообщение через ' + i + ' сек.'; win_.document.title = i;
+          }, sl)
+          sl += 1000 
         }
+      }, 0)
+      //**************** Таймер ****************
+      
+
+      // Задержка в seconds-7 сек и нажатие на кнопку Отправить
+      setTimeout(() => { win_.document.querySelector('button[class="ipsButton ipsButton_primary"]').click(); error_info.insertAdjacentHTML('beforeBegin', '<h2><span class="success-info">Сообщение отправлено.</span></h2>');  remove_post();}, ((parseInt(seconds) - 7) * 1000));
+        //check_error()
+        setTimeout(() => { win_.document.querySelector('span[class="success-info"]').remove(); check_error() ;if (NOTICE == true) { win_.document.title = "Done!" }; }, ((parseInt(seconds) + 7) * 1000));
+
+        setTimeout(() => { win_.document.querySelector('span[class="error-info"]').remove(); }, (parseInt(seconds) - 6) * 1000);
     }
-
-    function checkElement(elem) {
-        if (elem == 'earth' || elem == 'dex') {
-            return earthTrait
-        } else if (elem == 'lightning' || elem == 'cha') {
-            return ligthingTrait
-        } else if (elem == 'water' || elem == 'int') {
-            return waterTrait
-        } else if (elem == 'fire' || elem == 'str') {
-            return fireTrait
-        } else if (elem == 'power' || elem == 'pwr') {
-            return powerTrait
-        }
-    }
-
-    function printError(text) {
-        elem = document.querySelector('div[class="abuztrade-error"]');
-        elem.innerText = 'ScriptError: ' + text;
-        setTimeout(() => {elem.innerText = '';}, 5000)
-    }
-
-
-    function fight(heroPower, heroTrait, weaponBonusPower, weaponTrait, stat1Power, stat1Trait, stat2Power, stat2Trait, stat3Power, stat3Trait,
-                    enemy1Power, enemy1Trait, enemy2Power, enemy2Trait, enemy3Power, enemy3Trait, enemy4Power, enemy4Trait) {
-        
-        let weaponPowerMultiplier = getWeaponPower(weaponTrait, stat1Power, stat1Trait, stat2Power, stat2Trait, stat3Power, stat3Trait);
-
-        let power = (heroPower*weaponPowerMultiplier) + weaponBonusPower;
-
-        let enemy1Min = Math.ceil(enemy1Power - enemy1Power*0.1);
-        let enemy1Max = Math.floor(enemy1Power + enemy1Power*0.1);
-        let heroEnemy1Min = Math.ceil((power - power*0.1));
-        let heroEnemy1Max = Math.floor((power + power*0.1));
-
-        let enemy2Min = Math.ceil(enemy2Power - enemy2Power*0.1);
-        let enemy2Max = Math.floor(enemy2Power + enemy2Power*0.1);
-        let heroEnemy2Min = Math.ceil((power - power*0.1));
-        let heroEnemy2Max = Math.floor((power + power*0.1));
-
-        let enemy3Min = Math.ceil(enemy3Power - enemy3Power*0.1);
-        let enemy3Max = Math.floor(enemy3Power + enemy3Power*0.1);
-        let heroEnemy3Min = Math.ceil((power - power*0.1));
-        let heroEnemy3Max = Math.floor((power + power*0.1));
-
-        let enemy4Min = Math.ceil(enemy4Power - enemy4Power*0.1);
-        let enemy4Max = Math.floor(enemy4Power + enemy4Power*0.1);
-        let heroEnemy4Min = Math.ceil((power - power*0.1));
-        let heroEnemy4Max = Math.floor((power + power*0.1));
-
-        let traitBonus1 = traitBonus(heroTrait, weaponTrait, enemy1Trait);
-        let traitBonus2 = traitBonus(heroTrait, weaponTrait, enemy2Trait);
-        let traitBonus3 = traitBonus(heroTrait, weaponTrait, enemy3Trait);
-        let traitBonus4 = traitBonus(heroTrait, weaponTrait, enemy4Trait);
-
-        let loop = 500;
-        let won1 = 0;
-        let won2 = 0;
-        let won3 = 0;
-        let won4 = 0;
-        let randomHeroPower;
-        let randomEnemyPower;
-
-        for (let index = 0; index < loop; index++) {
-            randomHeroPower = getRandom10(heroEnemy1Min, heroEnemy1Max) * traitBonus1;
-            randomEnemyPower = getRandom10(enemy1Min, enemy1Max);
-            if(randomHeroPower >= randomEnemyPower) won1++;
-
-            randomHeroPower = getRandom10(heroEnemy2Min, heroEnemy2Max) * traitBonus2;
-            randomEnemyPower = getRandom10(enemy2Min, enemy2Max);
-            if(randomHeroPower >= randomEnemyPower) won2++;
-
-            randomHeroPower = getRandom10(heroEnemy3Min, heroEnemy3Max) * traitBonus3;
-            randomEnemyPower = getRandom10(enemy3Min, enemy3Max);
-            if(randomHeroPower >= randomEnemyPower) won3++;
-
-            randomHeroPower = getRandom10(heroEnemy4Min, heroEnemy4Max) * traitBonus4;
-            randomEnemyPower = getRandom10(enemy4Min, enemy4Max);
-            if(randomHeroPower >= randomEnemyPower) won4++;
-            
-        }
-        chance1 = ((won1/loop)*100).toFixed(2) + ' %'
-        chance2 = ((won2/loop)*100).toFixed(2) + ' %'
-        chance3 = ((won3/loop)*100).toFixed(2) + ' %'
-        chance4 = ((won4/loop)*100).toFixed(2) + ' %'
-        console.log(chance1, chance2, chance3, chance4)
-        return [chance1, chance2, chance3, chance4]
-    }
-
-    function getWeaponPower(weaponTrait, stat1, trait1, stat2, trait2, stat3, trait3) {
-        let powerPerPoint = 0.0025;
-        let matchingPowerPerPoint = powerPerPoint * 1.07;
-        let traitlessPowerPerPoint = powerPerPoint * 1.03;
-        let result = 1;
-
-        if (stat1 > 0 && trait1 >= 0) {
-            if (trait1 == weaponTrait) result = result + stat1 * matchingPowerPerPoint;
-            else if (trait1 == powerTrait) result = result + stat1 * traitlessPowerPerPoint;
-            else result = result + stat1 * powerPerPoint;
-        }
-        if (stat2 > 0 && trait2 >= 0) {
-            if (trait2 == weaponTrait) result = result + stat2 * matchingPowerPerPoint;
-            else if (trait2 == powerTrait) result = result + stat2 * traitlessPowerPerPoint;
-            else result = result + stat2 * powerPerPoint;
-        }
-        if (stat3 > 0 && trait3 >= 0) {
-            if (trait3 == weaponTrait) result = result + stat3 * matchingPowerPerPoint;
-            else if (trait3 == powerTrait) result = result + stat3 * traitlessPowerPerPoint;
-            else result = result + stat3 * powerPerPoint;
-        }
-        return result;
-    }
-
-    function traitBonus(characterTrait, weaponTrait, monsterTrait) {
-        let bonus = 1;
-        let oneBonus = 0.075;
-
-        if (characterTrait == weaponTrait) bonus = bonus + oneBonus;
-        if (isTraitEffectiveAgainst(characterTrait, monsterTrait)) bonus = bonus + oneBonus;
-        if (isTraitWeakAgainst(characterTrait, monsterTrait)) bonus = bonus - oneBonus;
-        return bonus;
-    }
-
-    function isTraitEffectiveAgainst(trait1, trait2) {
-        if (trait1 == fireTrait && trait2 == earthTrait) return true;
-        if (trait1 == waterTrait && trait2 == fireTrait) return true;
-        if (trait1 == ligthingTrait && trait2 == waterTrait) return true;
-        if (trait1 == earthTrait && trait2 == ligthingTrait) return true;
-        return false;
-    }
-
-    function isTraitWeakAgainst(trait1, trait2) {
-        if (trait1 == fireTrait && trait2 == waterTrait) return true;
-        if (trait1 == waterTrait && trait2 == ligthingTrait) return true;
-        if (trait1 == ligthingTrait && trait2 == earthTrait) return true;
-        if (trait1 == earthTrait && trait2 == fireTrait) return true;
-        return false;
-    }
-
-    function getRandom10(min, max) {
-        min = Math.ceil(min);
-        max = Math.floor(max);
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-}, 10000);
-
-
-
+  } else {
+    // Ошибка, поле пусто.
+    win_.document.querySelector('span[class="error-info"]').remove(); 
+    return
+  } 
+}

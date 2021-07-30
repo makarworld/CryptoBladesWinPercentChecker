@@ -20,7 +20,7 @@ window.onload = setTimeout(() => {
 
     var butElement = document.createElement('button')
     butElement.className = "abuztrade-fight"
-    butElement.innerHTML = '<div class="name-list" data-v-69ae70f6="">Show win %</div>'
+    butElement.innerHTML = '<div class="name-list" data-v-07ea9a5c="">Show win %</div>'
     butElement.style = "font-size: 1.5em;"
     while (document.querySelector('ul[class="character-list"]') == null) {}
     document.querySelector('ul[class="character-list"]').append(butElement)
@@ -28,14 +28,14 @@ window.onload = setTimeout(() => {
 
     var errElement = document.createElement('div')
     errElement.className = 'abuztrade-error'
-    errElement.innerHTML = '<span class="name-list" data-v-69ae70f6=""></span>'
+    errElement.innerHTML = '<span class="name-list" data-v-07ea9a5c=""></span>'
     errElement.style = "color: #40E0D0; font-family: serif;"
     while (document.querySelector('img[class="info-divider"]') == null) {}
     document.querySelector('img[class="info-divider"]').after(errElement)
     console.log('after')
 
     var inpElement = document.createElement('abuztrade')
-    inpElement.innerHTML = '<div style="font-weight: 400;font-size: 1.25em;height: 2px;padding: 9px 2px;border-radius: 5px;" class="name-list" data-v-69ae70f6=""><span>Bonus power: </span><input id="abuztrade-bonus-power" type="number"></input></div>'
+    inpElement.innerHTML = '<div style="font-weight: 400;font-size: 1.25em;height: 2px;padding: 9px 2px;border-radius: 5px;" class="name-list" data-v-07ea9a5c=""><span>Bonus power: </span><input id="abuztrade-bonus-power" type="number"></input></div>'
     while (document.querySelector('ul[class="character-list"]') == null) {}
     document.querySelector('ul[class="character-list"]').append(inpElement)
 
@@ -47,7 +47,7 @@ window.onload = setTimeout(() => {
         }
         try {
             // get trait hero in string, convert to int
-            let heroTraitStr = document.querySelectorAll('span[data-v-69ae70f6]')[1].className.replace('-icon trait-icon', '')
+            let heroTraitStr = document.querySelectorAll('span[data-v-07ea9a5c]')[1].className.replace('-icon trait-icon', '')
             var heroTrait = checkElement(heroTraitStr)
 
             // get weapon div, get all stats
@@ -89,7 +89,7 @@ window.onload = setTimeout(() => {
             let enemy4Trait = checkElement(enemies[3].querySelector('span').className.replace('-icon', ''));
 
             // hero power
-            let heroPower = validateInput(document.querySelectorAll('span[data-v-69ae70f6]')[4].innerText.replace(/\D+/, ''));
+            let heroPower = validateInput(document.querySelectorAll('span[data-v-07ea9a5c]')[4].innerText.replace(/\D+/, ''));
             // bonus power
             var weaponPower = document.querySelector('input[id="abuztrade-bonus-power"]').value;
             if (weaponPower == "") { 

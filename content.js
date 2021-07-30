@@ -20,107 +20,127 @@ window.onload = setTimeout(() => {
 
     var butElement = document.createElement('button')
     butElement.className = "abuztrade-fight"
-    butElement.innerHTML = '<div class="name-list" data-v-69ae70f6="">Show win %</div>'
+    butElement.innerHTML = '<div class="name-list" data-v-07ea9a5c="">Show win %</div>'
     butElement.style = "font-size: 1.5em;"
-    while (document.querySelector('ul[class="character-list"]') == null) {}
-    document.querySelector('ul[class="character-list"]').append(butElement)
-    console.log('append')
+    var checkExist = setInterval(function() {
+        if (document.querySelector('ul[class="character-list"]') != null) {
+            console.log("Exists 1!");
+            document.querySelector('ul[class="character-list"]').append(butElement)
+            console.log('append')
+            clearInterval(checkExist);
+        }
+    }, 100);
 
     var errElement = document.createElement('div')
     errElement.className = 'abuztrade-error'
-    errElement.innerHTML = '<span class="name-list" data-v-69ae70f6=""></span>'
-    errElement.style = "color: #40E0D0; font-family: serif;"
-    while (document.querySelector('img[class="info-divider"]') == null) {}
-    document.querySelector('img[class="info-divider"]').after(errElement)
-    console.log('after')
-
+    errElement.innerHTML = '<span class="name-list" data-v-07ea9a5c=""></span>'
+    errElement.style = "color: #40E0D0; font-family: serif; font-size: 1.5em;"
+    var checkExist2 = setInterval(function() {
+        if (document.querySelector('img[class="info-divider"]') != null) {
+            console.log("Exists 2!");
+            document.querySelector('img[class="info-divider"]').after(errElement)
+            console.log('after')
+            clearInterval(checkExist2);
+        }
+    }, 100);
     var inpElement = document.createElement('abuztrade')
-    inpElement.innerHTML = '<div style="font-weight: 400;font-size: 1.25em;height: 2px;padding: 9px 2px;border-radius: 5px;" class="name-list" data-v-69ae70f6=""><span>Bonus power: </span><input id="abuztrade-bonus-power" type="number"></input></div>'
-    while (document.querySelector('ul[class="character-list"]') == null) {}
-    document.querySelector('ul[class="character-list"]').append(inpElement)
-
-    document.querySelector('button[class="abuztrade-fight"]').addEventListener("click", function () {
-        console.log('click')
-        if (document.URL != "https://app.cryptoblades.io/#/combat") { 
-            printError('Open https://app.cryptoblades.io/#/combat for use script')
-            return
+    inpElement.innerHTML = '<div style="font-weight: 400;font-size: 1.25em;height: 2px;padding: 9px 2px;border-radius: 5px;" class="name-list" data-v-07ea9a5c=""><span>Bonus power: </span><input id="abuztrade-bonus-power" type="number"></input></div>'
+    var checkExist3 = setInterval(function() {
+        if (document.querySelector('ul[class="character-list"]') != null) {
+            console.log("Exists 3!");
+            document.querySelector('ul[class="character-list"]').append(inpElement)
+            clearInterval(checkExist3);
         }
-        try {
-            // get trait hero in string, convert to int
-            let heroTraitStr = document.querySelectorAll('span[data-v-69ae70f6]')[1].className.replace('-icon trait-icon', '')
-            var heroTrait = checkElement(heroTraitStr)
+    }, 100);
+    var checkExist4 = setInterval(function() {
+        if (document.querySelector('button[class="abuztrade-fight"]') != null) {
+            console.log("Exists 4!");
+            printError('Extension made by @abuztrade');
+            document.querySelector('button[class="abuztrade-fight"]').addEventListener("click", function () {
+                console.log('click')
+                if (document.URL != "https://app.cryptoblades.io/#/combat") { 
+                    printError('ScriptError: Open https://app.cryptoblades.io/#/combat for use script')
+                    return
+                }
+                try {
+                    // get trait hero in string, convert to int
+                    let heroTraitStr = document.querySelectorAll('span[data-v-07ea9a5c]')[1].className.replace('-icon trait-icon', '')
+                    var heroTrait = checkElement(heroTraitStr)
 
-            // get weapon div, get all stats
-            let weapon = document.querySelector('div[class="weapon-icon weapon-icon has-tooltip"]')
-            let stats = weapon.querySelector('div[class="stats"]').querySelectorAll('span')
+                    // get weapon div, get all stats
+                    let weapon = document.querySelector('div[class="weapon-icon weapon-icon has-tooltip"]')
+                    let stats = weapon.querySelector('div[class="stats"]').querySelectorAll('span')
 
-            // trait of weapon
-            let weaponTrait = checkElement(weapon.querySelector('span').className.replace('-icon', ''))
-            // stats
-            if (stats.length == 2) {
-                var stat1Trait = checkElement(stats[0].className.replace('mr-1 ', '').replace('-icon', '').replace('icon ', ''))
-                var stat2Trait = 0
-                var stat3Trait = 0
-                var stat1 = stats[1].innerText.replace(/\D+/, '')
-                var stat2 = 0
-                var stat3 = 0
-            } else if (stats.length == 4) {
-                var stat1Trait = checkElement(stats[0].className.replace('mr-1 ', '').replace('-icon', '').replace('icon ', ''))
-                var stat2Trait = checkElement(stats[2].className.replace('mr-1 ', '').replace('-icon', '').replace('icon ', ''))
-                var stat3Trait = 0
-                var stat1 = stats[1].innerText.replace(/\D+/, '')
-                var stat2 = stats[3].innerText.replace(/\D+/, '')
-                var stat3 = 0
-            } else if (stats.length == 6) {
-                var stat1Trait = checkElement(stats[0].className.replace('mr-1 ', '').replace('-icon', '').replace('icon ', ''))
-                var stat2Trait = checkElement(stats[2].className.replace('mr-1 ', '').replace('-icon', '').replace('icon ', ''))
-                var stat3Trait = checkElement(stats[4].className.replace('mr-1 ', '').replace('-icon', '').replace('icon ', ''))
-                var stat1 = stats[1].innerText.replace(/\D+/, '')
-                var stat2 = stats[3].innerText.replace(/\D+/, '')
-                var stat3 = stats[5].innerText.replace(/\D+/, '')
-            }
-            // enemies list
-            var enemies = document.querySelectorAll('div[class="encounter-container"]');
-            
-            // penemy trait
-            let enemy1Trait = checkElement(enemies[0].querySelector('span').className.replace('-icon', ''));
-            let enemy2Trait = checkElement(enemies[1].querySelector('span').className.replace('-icon', ''));
-            let enemy3Trait = checkElement(enemies[2].querySelector('span').className.replace('-icon', ''));
-            let enemy4Trait = checkElement(enemies[3].querySelector('span').className.replace('-icon', ''));
+                    // trait of weapon
+                    let weaponTrait = checkElement(weapon.querySelector('span').className.replace('-icon', ''))
+                    // stats
+                    if (stats.length == 2) {
+                        var stat1Trait = checkElement(stats[0].className.replace('mr-1 ', '').replace('-icon', '').replace('icon ', ''))
+                        var stat2Trait = 0
+                        var stat3Trait = 0
+                        var stat1 = stats[1].innerText.replace(/\D+/, '')
+                        var stat2 = 0
+                        var stat3 = 0
+                    } else if (stats.length == 4) {
+                        var stat1Trait = checkElement(stats[0].className.replace('mr-1 ', '').replace('-icon', '').replace('icon ', ''))
+                        var stat2Trait = checkElement(stats[2].className.replace('mr-1 ', '').replace('-icon', '').replace('icon ', ''))
+                        var stat3Trait = 0
+                        var stat1 = stats[1].innerText.replace(/\D+/, '')
+                        var stat2 = stats[3].innerText.replace(/\D+/, '')
+                        var stat3 = 0
+                    } else if (stats.length == 6) {
+                        var stat1Trait = checkElement(stats[0].className.replace('mr-1 ', '').replace('-icon', '').replace('icon ', ''))
+                        var stat2Trait = checkElement(stats[2].className.replace('mr-1 ', '').replace('-icon', '').replace('icon ', ''))
+                        var stat3Trait = checkElement(stats[4].className.replace('mr-1 ', '').replace('-icon', '').replace('icon ', ''))
+                        var stat1 = stats[1].innerText.replace(/\D+/, '')
+                        var stat2 = stats[3].innerText.replace(/\D+/, '')
+                        var stat3 = stats[5].innerText.replace(/\D+/, '')
+                    }
+                    // enemies list
+                    var enemies = document.querySelectorAll('div[class="encounter-container"]');
+                    
+                    // penemy trait
+                    let enemy1Trait = checkElement(enemies[0].querySelector('span').className.replace('-icon', ''));
+                    let enemy2Trait = checkElement(enemies[1].querySelector('span').className.replace('-icon', ''));
+                    let enemy3Trait = checkElement(enemies[2].querySelector('span').className.replace('-icon', ''));
+                    let enemy4Trait = checkElement(enemies[3].querySelector('span').className.replace('-icon', ''));
 
-            // hero power
-            let heroPower = validateInput(document.querySelectorAll('span[data-v-69ae70f6]')[4].innerText.replace(/\D+/, ''));
-            // bonus power
-            var weaponPower = document.querySelector('input[id="abuztrade-bonus-power"]').value;
-            if (weaponPower == "") { 
-                weaponPower = 0;
-            } else {
-                weaponPower = parseFloat(weaponPower);
-            }
+                    // hero power
+                    let heroPower = validateInput(document.querySelectorAll('span[data-v-07ea9a5c]')[4].innerText.replace(/\D+/, ''));
+                    // bonus power
+                    var weaponPower = document.querySelector('input[id="abuztrade-bonus-power"]').value;
+                    if (weaponPower == "") { 
+                        weaponPower = 0;
+                    } else {
+                        weaponPower = parseFloat(weaponPower);
+                    }
 
-            let enemy1 = validateInput(enemies[0].querySelector('div[class="encounter-power"]').innerText.replace(' Power', ''));
-            let enemy2 = validateInput(enemies[1].querySelector('div[class="encounter-power"]').innerText.replace(' Power', ''));
-            let enemy3 = validateInput(enemies[2].querySelector('div[class="encounter-power"]').innerText.replace(' Power', ''));
-            let enemy4 = validateInput(enemies[3].querySelector('div[class="encounter-power"]').innerText.replace(' Power', ''));
-            // print all data for debug
-            console.log(heroPower, heroTrait, weaponPower, weaponTrait, stat1, stat1Trait, stat2, stat2Trait, stat3, stat3Trait, enemy1, enemy1Trait, enemy2, enemy2Trait, enemy3, enemy3Trait, enemy4, enemy4Trait)
-            chances = fight(heroPower, heroTrait, weaponPower, weaponTrait, stat1, stat1Trait, stat2, stat2Trait, stat3, stat3Trait, enemy1, enemy1Trait, enemy2, enemy2Trait, enemy3, enemy3Trait, enemy4, enemy4Trait);
-            enemies[0].querySelector('h1').innerText = 'Win ' + chances[0]
-            enemies[1].querySelector('h1').innerText = 'Win ' + chances[1]
-            enemies[2].querySelector('h1').innerText = 'Win ' + chances[2]
-            enemies[3].querySelector('h1').innerText = 'Win ' + chances[3]
+                    let enemy1 = validateInput(enemies[0].querySelector('div[class="encounter-power"]').innerText.replace(' Power', ''));
+                    let enemy2 = validateInput(enemies[1].querySelector('div[class="encounter-power"]').innerText.replace(' Power', ''));
+                    let enemy3 = validateInput(enemies[2].querySelector('div[class="encounter-power"]').innerText.replace(' Power', ''));
+                    let enemy4 = validateInput(enemies[3].querySelector('div[class="encounter-power"]').innerText.replace(' Power', ''));
+                    // print all data for debug
+                    console.log(heroPower, heroTrait, weaponPower, weaponTrait, stat1, stat1Trait, stat2, stat2Trait, stat3, stat3Trait, enemy1, enemy1Trait, enemy2, enemy2Trait, enemy3, enemy3Trait, enemy4, enemy4Trait)
+                    chances = fight(heroPower, heroTrait, weaponPower, weaponTrait, stat1, stat1Trait, stat2, stat2Trait, stat3, stat3Trait, enemy1, enemy1Trait, enemy2, enemy2Trait, enemy3, enemy3Trait, enemy4, enemy4Trait);
+                    enemies[0].querySelector('h1').innerText = 'Win ' + chances[0]
+                    enemies[1].querySelector('h1').innerText = 'Win ' + chances[1]
+                    enemies[2].querySelector('h1').innerText = 'Win ' + chances[2]
+                    enemies[3].querySelector('h1').innerText = 'Win ' + chances[3]
 
-            if (clear1 == null) { clear1 = true; enemies[0].querySelector('button').addEventListener('click', () => {clearPercents(enemies)});}
-            if (clear2 == null) { clear2 = true; enemies[1].querySelector('button').addEventListener('click', () => {clearPercents(enemies)});}
-            if (clear3 == null) { clear3 = true; enemies[2].querySelector('button').addEventListener('click', () => {clearPercents(enemies)});}
-            if (clear4 == null) { clear4 = true; enemies[3].querySelector('button').addEventListener('click', () => {clearPercents(enemies)});}
+                    if (clear1 == null) { clear1 = true; enemies[0].querySelector('button').addEventListener('click', () => {clearPercents(enemies); clear1 = null});}
+                    if (clear2 == null) { clear2 = true; enemies[1].querySelector('button').addEventListener('click', () => {clearPercents(enemies); clear2 = null});}
+                    if (clear3 == null) { clear3 = true; enemies[2].querySelector('button').addEventListener('click', () => {clearPercents(enemies); clear3 = null});}
+                    if (clear4 == null) { clear4 = true; enemies[3].querySelector('button').addEventListener('click', () => {clearPercents(enemies); clear4 = null});}
 
-        } catch (err) {
-            printError('Error in parsing inputs');
-            console.log(err)
+                } catch (err) {
+                    printError('ScriptError: Error in parsing inputs');
+                    console.log(err)
+                }
+            });
+            clearInterval(checkExist4);
         }
-    });
-
+    }, 100);
+    
     function validateInput(input) {
         let num = input;
         if (!isNaN(parseFloat(num)) && isFinite(num)) {
@@ -154,7 +174,7 @@ window.onload = setTimeout(() => {
 
     function printError(text) {
         elem = document.querySelector('div[class="abuztrade-error"]');
-        elem.innerText = 'ScriptError: ' + text;
+        elem.innerText = text;
         setTimeout(() => {elem.innerText = '';}, 5000)
     }
 

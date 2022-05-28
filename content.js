@@ -6,7 +6,21 @@
 
 console.log("[abuztrade] Script started! Wait loading page...")
 
+const hero_span1 = 'div[class="character-highlight"]'
+const hero_trait_span = 'span[data-v-3158f51a]'
+const weaponSpan = 'span[data-v-7d16dd80]'
+
 window.onload = setTimeout(() => {
+
+    var style = document.createElement('style');
+    style.innerHTML = `
+              .chance-winning {
+              font-size: 32px !important;
+              }
+              `;
+    document.head.appendChild(style);
+
+
     const earthTrait = 0;
     const ligthingTrait = 1;
     const waterTrait = 2;
@@ -20,106 +34,56 @@ window.onload = setTimeout(() => {
 
     var butElement = document.createElement('button')
     butElement.className = "abuztrade-fight"
-    butElement.innerHTML = '<div class="name-list" data-v-07ea9a5c="">Show win %</div>'
+    butElement.innerHTML = '<div class="name-list" data-v-b7924038="">Show win %</div>'
     butElement.style = "font-size: 1.5em;"
-    while (document.querySelector('ul[class="character-list"]') == null) {}
-    document.querySelector('ul[class="character-list"]').append(butElement)
-    console.log('append')
+    var checkExist = setInterval(function() {
+        if (document.querySelector('div[class="character-list col"]') != null) {
+            console.log("Exists 1!");
+            // document.querySelector('div[class="character-list col"]').append(butElement)
+            console.log('append')
+            clearInterval(checkExist);
+        }
+    }, 100);
 
     var errElement = document.createElement('div')
     errElement.className = 'abuztrade-error'
-    errElement.innerHTML = '<span class="name-list" data-v-07ea9a5c=""></span>'
-    errElement.style = "color: #40E0D0; font-family: serif;"
-    while (document.querySelector('img[class="info-divider"]') == null) {}
-    document.querySelector('img[class="info-divider"]').after(errElement)
-    console.log('after')
-
+    errElement.innerHTML = '<span class="name-list" data-v-b7924038=""></span>'
+    errElement.style = "color: #40E0D0; font-family: serif; font-size: 1.5em;"
+    // var checkExist2 = setInterval(function() {
+    //     if (document.querySelector('img[class="info-divider"]') != null) {
+    //         console.log("Exists 2!");
+    //         document.querySelector('img[class="info-divider"]').after(errElement)
+    //         console.log('after')
+    //         clearInterval(checkExist2);
+    //     }
+    // }, 100);
     var inpElement = document.createElement('abuztrade')
-    inpElement.innerHTML = '<div style="font-weight: 400;font-size: 1.25em;height: 2px;padding: 9px 2px;border-radius: 5px;" class="name-list" data-v-07ea9a5c=""><span>Bonus power: </span><input id="abuztrade-bonus-power" type="number"></input></div>'
-    while (document.querySelector('ul[class="character-list"]') == null) {}
-    document.querySelector('ul[class="character-list"]').append(inpElement)
-
-    document.querySelector('button[class="abuztrade-fight"]').addEventListener("click", function () {
-        console.log('click')
-        if (document.URL != "https://app.cryptoblades.io/#/combat") { 
-            printError('Open https://app.cryptoblades.io/#/combat for use script')
-            return
-        }
-        try {
-            // get trait hero in string, convert to int
-            let heroTraitStr = document.querySelectorAll('span[data-v-07ea9a5c]')[1].className.replace('-icon trait-icon', '')
-            var heroTrait = checkElement(heroTraitStr)
-
-            // get weapon div, get all stats
-            let weapon = document.querySelector('div[class="weapon-icon weapon-icon has-tooltip"]')
-            let stats = weapon.querySelector('div[class="stats"]').querySelectorAll('span')
-
-            // trait of weapon
-            let weaponTrait = checkElement(weapon.querySelector('span').className.replace('-icon', ''))
-            // stats
-            if (stats.length == 2) {
-                var stat1Trait = checkElement(stats[0].className.replace('mr-1 ', '').replace('-icon', '').replace('icon ', ''))
-                var stat2Trait = 0
-                var stat3Trait = 0
-                var stat1 = stats[1].innerText.replace(/\D+/, '')
-                var stat2 = 0
-                var stat3 = 0
-            } else if (stats.length == 4) {
-                var stat1Trait = checkElement(stats[0].className.replace('mr-1 ', '').replace('-icon', '').replace('icon ', ''))
-                var stat2Trait = checkElement(stats[2].className.replace('mr-1 ', '').replace('-icon', '').replace('icon ', ''))
-                var stat3Trait = 0
-                var stat1 = stats[1].innerText.replace(/\D+/, '')
-                var stat2 = stats[3].innerText.replace(/\D+/, '')
-                var stat3 = 0
-            } else if (stats.length == 6) {
-                var stat1Trait = checkElement(stats[0].className.replace('mr-1 ', '').replace('-icon', '').replace('icon ', ''))
-                var stat2Trait = checkElement(stats[2].className.replace('mr-1 ', '').replace('-icon', '').replace('icon ', ''))
-                var stat3Trait = checkElement(stats[4].className.replace('mr-1 ', '').replace('-icon', '').replace('icon ', ''))
-                var stat1 = stats[1].innerText.replace(/\D+/, '')
-                var stat2 = stats[3].innerText.replace(/\D+/, '')
-                var stat3 = stats[5].innerText.replace(/\D+/, '')
-            }
-            // enemies list
-            var enemies = document.querySelectorAll('div[class="encounter-container"]');
-            
-            // penemy trait
-            let enemy1Trait = checkElement(enemies[0].querySelector('span').className.replace('-icon', ''));
-            let enemy2Trait = checkElement(enemies[1].querySelector('span').className.replace('-icon', ''));
-            let enemy3Trait = checkElement(enemies[2].querySelector('span').className.replace('-icon', ''));
-            let enemy4Trait = checkElement(enemies[3].querySelector('span').className.replace('-icon', ''));
-
-            // hero power
-            let heroPower = validateInput(document.querySelectorAll('span[data-v-07ea9a5c]')[4].innerText.replace(/\D+/, ''));
-            // bonus power
-            var weaponPower = document.querySelector('input[id="abuztrade-bonus-power"]').value;
-            if (weaponPower == "") { 
-                weaponPower = 0;
-            } else {
-                weaponPower = parseFloat(weaponPower);
-            }
-
-            let enemy1 = validateInput(enemies[0].querySelector('div[class="encounter-power"]').innerText.replace(' Power', ''));
-            let enemy2 = validateInput(enemies[1].querySelector('div[class="encounter-power"]').innerText.replace(' Power', ''));
-            let enemy3 = validateInput(enemies[2].querySelector('div[class="encounter-power"]').innerText.replace(' Power', ''));
-            let enemy4 = validateInput(enemies[3].querySelector('div[class="encounter-power"]').innerText.replace(' Power', ''));
-            // print all data for debug
-            console.log(heroPower, heroTrait, weaponPower, weaponTrait, stat1, stat1Trait, stat2, stat2Trait, stat3, stat3Trait, enemy1, enemy1Trait, enemy2, enemy2Trait, enemy3, enemy3Trait, enemy4, enemy4Trait)
-            chances = fight(heroPower, heroTrait, weaponPower, weaponTrait, stat1, stat1Trait, stat2, stat2Trait, stat3, stat3Trait, enemy1, enemy1Trait, enemy2, enemy2Trait, enemy3, enemy3Trait, enemy4, enemy4Trait);
-            enemies[0].querySelector('h1').innerText = 'Win ' + chances[0]
-            enemies[1].querySelector('h1').innerText = 'Win ' + chances[1]
-            enemies[2].querySelector('h1').innerText = 'Win ' + chances[2]
-            enemies[3].querySelector('h1').innerText = 'Win ' + chances[3]
-
-            if (clear1 == null) { clear1 = true; enemies[0].querySelector('button').addEventListener('click', () => {clearPercents(enemies)});}
-            if (clear2 == null) { clear2 = true; enemies[1].querySelector('button').addEventListener('click', () => {clearPercents(enemies)});}
-            if (clear3 == null) { clear3 = true; enemies[2].querySelector('button').addEventListener('click', () => {clearPercents(enemies)});}
-            if (clear4 == null) { clear4 = true; enemies[3].querySelector('button').addEventListener('click', () => {clearPercents(enemies)});}
-
-        } catch (err) {
-            printError('Error in parsing inputs');
-            console.log(err)
-        }
-    });
+    inpElement.innerHTML = '<div style="font-weight: 400;font-size: 1.25em;height: 2px;padding: 9px 2px;border-radius: 5px;" class="name-list" data-v-b7924038=""><span>Bonus power: </span><input id="abuztrade-bonus-power" type="number"></input></div>'
+    // var checkExist3 = setInterval(function() {
+    //     if (document.querySelector('ul[class="character-list"]') != null) {
+    //         console.log("Exists 3!");
+    //         // document.querySelector('ul[class="character-list"]').append(inpElement)
+    //         clearInterval(checkExist3);
+    //     }
+    // }, 100);
+    var checkExist4 = setInterval(function() {
+        // if (document.querySelector('button[class="abuztrade-fight"]') != null) {
+            console.log("Exists 4!");
+            printError('Extension made by @abuztrade');
+            // document.querySelector('button[class="abuztrade-fight"]').addEventListener("click", function () {
+            //     console.log('click')
+            //     combat()
+            // });
+            combat()
+            setInterval(function () {
+                combat()
+            }, 1000)
+            setInterval(function () {
+                check_character_power()
+            }, 3000)
+            clearInterval(checkExist4);
+        // }
+    }, 100);
 
     function validateInput(input) {
         let num = input;
@@ -139,29 +103,218 @@ window.onload = setTimeout(() => {
     }
 
     function checkElement(elem) {
-        if (elem == 'earth' || elem == 'dex') {
+        if (elem == 'earth-element' || elem == 'earth' || elem == 'dex') {
             return earthTrait
-        } else if (elem == 'lightning' || elem == 'cha') {
+        } else if (elem == 'lightning-element' || elem == 'lightning' || elem == 'cha') {
             return ligthingTrait
-        } else if (elem == 'water' || elem == 'int') {
+        } else if (elem == 'water-element' || elem == 'water' || elem == 'int') {
             return waterTrait
-        } else if (elem == 'fire' || elem == 'str') {
+        } else if (elem == 'fire-element' || elem == 'fire' || elem == 'str') {
             return fireTrait
-        } else if (elem == 'power' || elem == 'pwr') {
+        } else if (elem == 'power-element' || elem == 'power' || elem == 'pwr') {
             return powerTrait
         }
     }
 
     function printError(text) {
         elem = document.querySelector('div[class="abuztrade-error"]');
-        elem.innerText = 'ScriptError: ' + text;
-        setTimeout(() => {elem.innerText = '';}, 5000)
+    }
+
+    function check_character_power() {
+        try {
+                let characters = document.querySelectorAll('[class*="character-animation-applied"]');
+                if (characters.length < 1) {
+                    console.log("exit", characters.length)
+                    return
+                }
+
+                let cb_data = null
+                chrome.storage.local.get("cb_data", function(result) {
+                    // console.log('Value currently is ' + result.cb_data);
+                    // console.log(result);
+                    cb_data = result.cb_data
+                    // console.log("cb_data  GET")
+                    // console.log(cb_data)
+                    try {
+                        if (cb_data.constructor !== Object){
+                            cb_data = {}
+                            console.log("EMPTY")
+                        }
+                    } catch (e) {
+                        cb_data = {}
+                        console.log("EXCEPTION")
+                    }
+
+                    for (let i = 0; i < characters.length; i++) {
+                        var character = characters[i];
+                        var character_name = character.querySelector('[class*="name black-outline"]').textContent.trim()
+                        var character_power = parseInt(character.querySelector('[class*="character-power"]').textContent.replace("PWR", '').replace(" ", ''))
+                        // console.log(character_name)
+                        // console.log(character_power)
+                        cb_data[character_name] = character_power
+                    }
+                    // console.log("cb_data2")
+                    // console.log(cb_data)
+                    chrome.storage.local.set({"cb_data": cb_data}, function() {
+                        // console.log('Value is set to ' + cb_data);
+                    });
+                });
+        } catch (err) {
+            printError('ScriptError: Error in parsing inputs');
+            console.log(err)
+        }
     }
 
 
+    function combat() {
+        console.log("combat")
+        if (!document.URL.includes("https://app.cryptoblades.io/#/combat")) {
+            console.log('ScriptError: Open https://app.cryptoblades.io/#/combat for use script')
+            return
+        }
+        console.log("start combat")
+        try {
+            chrome.storage.local.get("cb_data", function(result) {
+                console.log('Value currently is ' + result.cb_data);
+                console.log(result);
+                cb_data = result.cb_data
+                console.log("cb_data  GET")
+                console.log(cb_data)
+
+                // get trait hero in string, convert to int
+                let hero_data = document.querySelectorAll(hero_span1)[0]
+                let heroTraitStr = hero_data.querySelectorAll(hero_trait_span)[1].id
+                console.log("heroTraitStr")
+                console.log(heroTraitStr)
+
+                var heroTrait = checkElement(heroTraitStr)
+
+                // get weapon div, get all stats
+                let weapon = document.querySelector('div[class*="weapon-icon weapon-icon"]')
+                console.log("weapon")
+                console.log(weapon)
+                let stats = weapon.querySelector('div[class="stats"]').querySelectorAll(weaponSpan)
+                console.log("stats")
+                console.log(stats)
+                // trait of weapon
+                let weaponTrait = checkElement(weapon.querySelector('span').className.replace('-icon', ''))
+
+                console.log("weaponTrait")
+                console.log(weaponTrait)
+                // stats
+                if (stats.length == 2) {
+                    var stat1Trait = checkElement(stats[0].className.replace('mr-1 ', '').replace('-icon', '').replace('icon ', ''))
+                    var stat2Trait = 0
+                    var stat3Trait = 0
+                    var stat1 = stats[1].innerText.replace(/\D+/, '')
+                    var stat2 = 0
+                    var stat3 = 0
+                } else if (stats.length == 4) {
+                    var stat1Trait = checkElement(stats[0].className.replace('mr-1 ', '').replace('-icon', '').replace('icon ', ''))
+                    var stat2Trait = checkElement(stats[2].className.replace('mr-1 ', '').replace('-icon', '').replace('icon ', ''))
+                    var stat3Trait = 0
+                    var stat1 = stats[1].innerText.replace(/\D+/, '')
+                    var stat2 = stats[3].innerText.replace(/\D+/, '')
+                    var stat3 = 0
+                } else if (stats.length == 6) {
+                    var stat1Trait = checkElement(stats[0].className.replace('mr-1 ', '').replace('-icon', '').replace('icon ', ''))
+                    var stat2Trait = checkElement(stats[2].className.replace('mr-1 ', '').replace('-icon', '').replace('icon ', ''))
+                    var stat3Trait = checkElement(stats[4].className.replace('mr-1 ', '').replace('-icon', '').replace('icon ', ''))
+                    var stat1 = stats[1].innerText.replace(/\D+/, '')
+                    var stat2 = stats[3].innerText.replace(/\D+/, '')
+                    var stat3 = stats[5].innerText.replace(/\D+/, '')
+                }
+
+                console.log("stats.length")
+                console.log(stat1Trait)
+                console.log(stat2Trait)
+                console.log(stat3Trait)
+                console.log(stat1)
+                console.log(stat2)
+                console.log(stat3)
+
+                // enemies list
+                var enemies = document.querySelectorAll('div[class="encounter-container"]');
+                console.log("enemies")
+                console.log(enemies)
+                console.log(enemies)
+                // penemy trait
+                let enemy1Trait = checkElement(enemies[0].querySelector('div[class="encounter-element"]').querySelector('span').className.replace('-icon', ''));
+                let enemy2Trait = checkElement(enemies[1].querySelector('div[class="encounter-element"]').querySelector('span').className.replace('-icon', ''));
+                let enemy3Trait = checkElement(enemies[2].querySelector('div[class="encounter-element"]').querySelector('span').className.replace('-icon', ''));
+                let enemy4Trait = checkElement(enemies[3].querySelector('div[class="encounter-element"]').querySelector('span').className.replace('-icon', ''));
+                //
+                console.log(enemy1Trait)
+                console.log(enemy2Trait)
+                console.log(enemy3Trait)
+                console.log(enemy4Trait)
+                // hero power
+
+
+                let heroPower;
+
+                hero_name = hero_data.querySelector('.name-list').textContent.trim()
+                heroPower = cb_data[hero_name]
+                //
+                console.log("hero_name")
+                console.log(hero_name)
+
+                console.log("heroPower")
+                console.log(heroPower)
+
+                // let heroPower = validateInput(document.querySelectorAll(hero_span1)[2].querySelectorAll(hero_span1)[1].innerText.replace(/\D+/, ''));
+
+                // bonus power
+                // var weaponPower = document.querySelector('input[id="abuztrade-bonus-power"]').value;
+                // if (weaponPower == "") {
+                //     weaponPower = 0;
+                // } else {
+                //     weaponPower = parseFloat(weaponPower);
+                // }
+
+                console.log("enemies 2")
+                // console.log(enemies)
+                // console.log(enemies[0].querySelector('div[class*="encounter-power"]').innerText)
+                // console.log(enemies[1].querySelector('div[class*="encounter-power"]').innerText)
+                // console.log(enemies[2].querySelector('div[class*="encounter-power"]').innerText)
+                // console.log(enemies[3].querySelector('div[class*="encounter-power"]').innerText)
+                // console.log(enemies[0].querySelector('div[class*="encounter-power"]').innerText.replace('POWER :', '').replace(',', ''));
+                // console.log(enemies[1].querySelector('div[class*="encounter-power"]').innerText.replace('POWER :', '').replace(',', ''));
+                // console.log(enemies[2].querySelector('div[class*="encounter-power"]').innerText.replace('POWER :', '').replace(',', ''));
+                // console.log(enemies[3].querySelector('div[class*="encounter-power"]').innerText.replace('POWER :', '').replace(',', ''));
+
+                var weaponPower = 0;
+                let enemy1 = validateInput(enemies[0].querySelector('div[class*="encounter-power"]').innerText.replace('POWER :', '').replace(',', ''));
+                let enemy2 = validateInput(enemies[1].querySelector('div[class*="encounter-power"]').innerText.replace('POWER :', '').replace(',', ''));
+                let enemy3 = validateInput(enemies[2].querySelector('div[class*="encounter-power"]').innerText.replace('POWER :', '').replace(',', ''));
+                let enemy4 = validateInput(enemies[3].querySelector('div[class*="encounter-power"]').innerText.replace('POWER :', '').replace(',', ''));
+
+
+                // print all data for debug
+                console.log(heroPower, heroTrait, weaponPower, weaponTrait, stat1, stat1Trait, stat2, stat2Trait, stat3, stat3Trait, enemy1, enemy1Trait, enemy2, enemy2Trait, enemy3, enemy3Trait, enemy4, enemy4Trait)
+                chances = fight(heroPower, heroTrait, weaponPower, weaponTrait, stat1, stat1Trait, stat2, stat2Trait, stat3, stat3Trait, enemy1, enemy1Trait, enemy2, enemy2Trait, enemy3, enemy3Trait, enemy4, enemy4Trait);
+                enemies[0].querySelector('div[class*="chance-winning"]').innerText = 'Win ' + chances[0]
+                enemies[1].querySelector('div[class*="chance-winning"]').innerText = 'Win ' + chances[1]
+                enemies[2].querySelector('div[class*="chance-winning"]').innerText = 'Win ' + chances[2]
+                enemies[3].querySelector('div[class*="chance-winning"]').innerText = 'Win ' + chances[3]
+
+                if (clear1 == null) { clear1 = true; enemies[0].querySelector('button').addEventListener('click', () => {clearPercents(enemies); clear1 = null});}
+                if (clear2 == null) { clear2 = true; enemies[1].querySelector('button').addEventListener('click', () => {clearPercents(enemies); clear2 = null});}
+                if (clear3 == null) { clear3 = true; enemies[2].querySelector('button').addEventListener('click', () => {clearPercents(enemies); clear3 = null});}
+                if (clear4 == null) { clear4 = true; enemies[3].querySelector('button').addEventListener('click', () => {clearPercents(enemies); clear4 = null});}
+            });
+
+        } catch (err) {
+            printError('ScriptError: Error in parsing inputs');
+            console.log("ScriptError: Error in parsing inputs", err)
+        }
+    }
+
+
+
     function fight(heroPower, heroTrait, weaponBonusPower, weaponTrait, stat1Power, stat1Trait, stat2Power, stat2Trait, stat3Power, stat3Trait,
-                    enemy1Power, enemy1Trait, enemy2Power, enemy2Trait, enemy3Power, enemy3Trait, enemy4Power, enemy4Trait) {
-        
+                   enemy1Power, enemy1Trait, enemy2Power, enemy2Trait, enemy3Power, enemy3Trait, enemy4Power, enemy4Trait) {
+
         let weaponPowerMultiplier = getWeaponPower(weaponTrait, stat1Power, stat1Trait, stat2Power, stat2Trait, stat3Power, stat3Trait);
 
         let power = (heroPower*weaponPowerMultiplier) + weaponBonusPower;
@@ -215,7 +368,7 @@ window.onload = setTimeout(() => {
             randomHeroPower = getRandom10(heroEnemy4Min, heroEnemy4Max) * traitBonus4;
             randomEnemyPower = getRandom10(enemy4Min, enemy4Max);
             if(randomHeroPower >= randomEnemyPower) won4++;
-            
+
         }
         chance1 = ((won1/loop)*100).toFixed(2) + ' %'
         chance2 = ((won2/loop)*100).toFixed(2) + ' %'
@@ -280,7 +433,4 @@ window.onload = setTimeout(() => {
         max = Math.floor(max);
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
-}, 10000);
-
-
-
+}, 100);

@@ -81,7 +81,7 @@ window.onload = setTimeout(() => {
             setInterval(function () {
                 check_character_power()
                 check_weapon_stats()
-            }, 3000)
+            }, 1000)
             clearInterval(checkExist4);
         // }
     }, 100);

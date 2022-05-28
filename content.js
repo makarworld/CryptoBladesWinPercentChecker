@@ -7,8 +7,8 @@
 console.log("[abuztrade] Script started! Wait loading page...")
 
 const hero_span1 = 'div[class="character-highlight"]'
-const hero_trait_span = 'span[data-v-3158f51a]'
-const weaponSpan = 'span[data-v-7d16dd80]'
+const hero_trait_span = 'span[data-v-c0c31cfa]'
+const weaponSpan = 'span[data-v-20864e64]'
 
 window.onload = setTimeout(() => {
 
@@ -80,6 +80,7 @@ window.onload = setTimeout(() => {
             }, 1000)
             setInterval(function () {
                 check_character_power()
+                check_weapon_stats()
             }, 3000)
             clearInterval(checkExist4);
         // }
@@ -122,7 +123,7 @@ window.onload = setTimeout(() => {
 
     function check_character_power() {
         try {
-                let characters = document.querySelectorAll('[class*="character-animation-applied"]');
+                let characters = document.querySelectorAll('h1[data-v-2fd992f2]');
                 if (characters.length < 1) {
                     console.log("exit", characters.length)
                     return
@@ -145,18 +146,93 @@ window.onload = setTimeout(() => {
                         console.log("EXCEPTION")
                     }
 
-                    for (let i = 0; i < characters.length; i++) {
-                        var character = characters[i];
-                        var character_name = character.querySelector('[class*="name black-outline"]').textContent.trim()
-                        var character_power = parseInt(character.querySelector('[class*="character-power"]').textContent.replace("PWR", '').replace(" ", ''))
-                        // console.log(character_name)
-                        // console.log(character_power)
-                        cb_data[character_name] = character_power
-                    }
+                    var character_name = document.querySelector('h1[data-v-2fd992f2]').textContent.trim()
+                    var character_power = parseInt(document.querySelectorAll('span[class*="alt-text cell-value"]')[1].textContent.replace("PWR", '').replace(" ", ''))
+                    // console.log(character_name)
+                    // console.log(character_power)
+                    cb_data[character_name] = character_power
                     // console.log("cb_data2")
                     // console.log(cb_data)
                     chrome.storage.local.set({"cb_data": cb_data}, function() {
-                        // console.log('Value is set to ' + cb_data);
+                        console.log("saved", character_name, character_power)
+                    });
+                });
+        } catch (err) {
+            printError('ScriptError: Error in parsing inputs');
+            console.log(err)
+        }
+    }
+    
+    function check_weapon_stats() {
+        try {
+                let weapons = document.querySelectorAll('li[class*="weapon"]');
+                if (weapons.length < 1) {
+                    console.log("exit", weapons.length)
+                    return
+                }
+
+                let cb_data = null
+                chrome.storage.local.get("cb_data", function(result) {
+                    // console.log('Value currently is ' + result.cb_data);
+                    // console.log(result);
+                    cb_data = result.cb_data
+                    // console.log("cb_data  GET")
+                    // console.log(cb_data)
+                    try {
+                        if (cb_data.constructor !== Object){
+                            cb_data = {}
+                            console.log("EMPTY")
+                        }
+                    } catch (e) {
+                        cb_data = {}
+                        console.log("EXCEPTION")
+                    }
+
+                   
+                    for (let i = 0; i < weapons.length; i++) {
+                        var weapon = weapons[i];
+                        let stats = weapon.querySelector('div[class="stats"]').querySelectorAll(weaponSpan)
+                        // trait of weapon
+                        let weaponName = weapon.querySelector('div[class="name"]').querySelectorAll(weaponSpan)[0].textContent.trim();
+                        let trait = weapon.querySelector('div[class="name"]').querySelector('span[class*="icon-trait"]').className.replace('icon-trait ', '').replace('-icon', '')
+                        let weaponTrait = checkElement(trait)
+                        // stats
+                        if (stats.length == 2) {
+                            var stat1Trait = checkElement(stats[0].className.replace('mr-1 ', '').replace('-icon', '').replace('icon ', ''))
+                            var stat2Trait = 0
+                            var stat3Trait = 0
+                            var stat1 = stats[1].innerText.replace(/\D+/, '')
+                            var stat2 = 0
+                            var stat3 = 0
+                        } else if (stats.length == 4) {
+                            var stat1Trait = checkElement(stats[0].className.replace('mr-1 ', '').replace('-icon', '').replace('icon ', ''))
+                            var stat2Trait = checkElement(stats[2].className.replace('mr-1 ', '').replace('-icon', '').replace('icon ', ''))
+                            var stat3Trait = 0
+                            var stat1 = stats[1].innerText.replace(/\D+/, '')
+                            var stat2 = stats[3].innerText.replace(/\D+/, '')
+                            var stat3 = 0
+                        } else if (stats.length == 6) {
+                            var stat1Trait = checkElement(stats[0].className.replace('mr-1 ', '').replace('-icon', '').replace('icon ', ''))
+                            var stat2Trait = checkElement(stats[2].className.replace('mr-1 ', '').replace('-icon', '').replace('icon ', ''))
+                            var stat3Trait = checkElement(stats[4].className.replace('mr-1 ', '').replace('-icon', '').replace('icon ', ''))
+                            var stat1 = stats[1].innerText.replace(/\D+/, '')
+                            var stat2 = stats[3].innerText.replace(/\D+/, '')
+                            var stat3 = stats[5].innerText.replace(/\D+/, '')
+                        }
+
+                        data = {
+                            "trait" : weaponTrait,
+                            "stat1Trait" : stat1Trait,
+                            "stat2Trait" : stat2Trait,
+                            "stat3Trait" : stat3Trait,
+                            "stat1" : stat1,
+                            "stat2" : stat2,
+                            "stat3" : stat3,
+                        }
+                        cb_data[weaponName] = data
+                        //console.log("saved", weaponName)
+                    }
+                    chrome.storage.local.set({"cb_data": cb_data}, function() {
                     });
                 });
         } catch (err) {
@@ -175,11 +251,11 @@ window.onload = setTimeout(() => {
         console.log("start combat")
         try {
             chrome.storage.local.get("cb_data", function(result) {
-                console.log('Value currently is ' + result.cb_data);
-                console.log(result);
+                //console.log('Value currently is ' + result.cb_data);
+                //console.log(result);
                 cb_data = result.cb_data
-                console.log("cb_data  GET")
-                console.log(cb_data)
+                // console.log("cb_data  GET")
+                // console.log(cb_data)
 
                 // get trait hero in string, convert to int
                 let hero_data = document.querySelectorAll(hero_span1)[0]
@@ -190,64 +266,23 @@ window.onload = setTimeout(() => {
                 var heroTrait = checkElement(heroTraitStr)
 
                 // get weapon div, get all stats
-                let weapon = document.querySelector('div[class*="weapon-icon weapon-icon"]')
-                console.log("weapon")
-                console.log(weapon)
-                let stats = weapon.querySelector('div[class="stats"]').querySelectorAll(weaponSpan)
-                console.log("stats")
-                console.log(stats)
-                // trait of weapon
-                let weaponTrait = checkElement(weapon.querySelector('span').className.replace('-icon', ''))
-
-                console.log("weaponTrait")
-                console.log(weaponTrait)
-                // stats
-                if (stats.length == 2) {
-                    var stat1Trait = checkElement(stats[0].className.replace('mr-1 ', '').replace('-icon', '').replace('icon ', ''))
-                    var stat2Trait = 0
-                    var stat3Trait = 0
-                    var stat1 = stats[1].innerText.replace(/\D+/, '')
-                    var stat2 = 0
-                    var stat3 = 0
-                } else if (stats.length == 4) {
-                    var stat1Trait = checkElement(stats[0].className.replace('mr-1 ', '').replace('-icon', '').replace('icon ', ''))
-                    var stat2Trait = checkElement(stats[2].className.replace('mr-1 ', '').replace('-icon', '').replace('icon ', ''))
-                    var stat3Trait = 0
-                    var stat1 = stats[1].innerText.replace(/\D+/, '')
-                    var stat2 = stats[3].innerText.replace(/\D+/, '')
-                    var stat3 = 0
-                } else if (stats.length == 6) {
-                    var stat1Trait = checkElement(stats[0].className.replace('mr-1 ', '').replace('-icon', '').replace('icon ', ''))
-                    var stat2Trait = checkElement(stats[2].className.replace('mr-1 ', '').replace('-icon', '').replace('icon ', ''))
-                    var stat3Trait = checkElement(stats[4].className.replace('mr-1 ', '').replace('-icon', '').replace('icon ', ''))
-                    var stat1 = stats[1].innerText.replace(/\D+/, '')
-                    var stat2 = stats[3].innerText.replace(/\D+/, '')
-                    var stat3 = stats[5].innerText.replace(/\D+/, '')
-                }
-
-                console.log("stats.length")
-                console.log(stat1Trait)
-                console.log(stat2Trait)
-                console.log(stat3Trait)
-                console.log(stat1)
-                console.log(stat2)
-                console.log(stat3)
+                
 
                 // enemies list
                 var enemies = document.querySelectorAll('div[class="encounter-container"]');
-                console.log("enemies")
-                console.log(enemies)
-                console.log(enemies)
+                //console.log("enemies")
+                //console.log(enemies)
                 // penemy trait
                 let enemy1Trait = checkElement(enemies[0].querySelector('div[class="encounter-element"]').querySelector('span').className.replace('-icon', ''));
                 let enemy2Trait = checkElement(enemies[1].querySelector('div[class="encounter-element"]').querySelector('span').className.replace('-icon', ''));
                 let enemy3Trait = checkElement(enemies[2].querySelector('div[class="encounter-element"]').querySelector('span').className.replace('-icon', ''));
                 let enemy4Trait = checkElement(enemies[3].querySelector('div[class="encounter-element"]').querySelector('span').className.replace('-icon', ''));
                 //
-                console.log(enemy1Trait)
-                console.log(enemy2Trait)
-                console.log(enemy3Trait)
-                console.log(enemy4Trait)
+                //console.log("enemies traits")
+                //console.log(enemy1Trait)
+                //console.log(enemy2Trait)
+                //console.log(enemy3Trait)
+                //console.log(enemy4Trait)
                 // hero power
 
 
@@ -261,6 +296,15 @@ window.onload = setTimeout(() => {
 
                 console.log("heroPower")
                 console.log(heroPower)
+
+
+                let weapon_name = document.querySelector('div[class="weapon-details"]').querySelector('div[class="name-desktop"]').textContent.trim()
+                let weaponData = cb_data[weapon_name]
+                console.log("weapon_name")
+                console.log(weapon_name)
+                console.log("weaponData")
+                console.log(weaponData)
+
 
                 // let heroPower = validateInput(document.querySelectorAll(hero_span1)[2].querySelectorAll(hero_span1)[1].innerText.replace(/\D+/, ''));
 
@@ -291,8 +335,8 @@ window.onload = setTimeout(() => {
 
 
                 // print all data for debug
-                console.log(heroPower, heroTrait, weaponPower, weaponTrait, stat1, stat1Trait, stat2, stat2Trait, stat3, stat3Trait, enemy1, enemy1Trait, enemy2, enemy2Trait, enemy3, enemy3Trait, enemy4, enemy4Trait)
-                chances = fight(heroPower, heroTrait, weaponPower, weaponTrait, stat1, stat1Trait, stat2, stat2Trait, stat3, stat3Trait, enemy1, enemy1Trait, enemy2, enemy2Trait, enemy3, enemy3Trait, enemy4, enemy4Trait);
+                console.log(heroPower, heroTrait, weaponPower, weaponData.trait, weaponData.stat1, weaponData.stat1Trait, weaponData.stat2, weaponData.stat2Trait, weaponData.stat3, weaponData.stat3Trait, enemy1, enemy1Trait, enemy2, enemy2Trait, enemy3, enemy3Trait, enemy4, enemy4Trait)
+                chances = fight(heroPower, heroTrait, weaponPower, weaponData.trait, weaponData.stat1, weaponData.stat1Trait, weaponData.stat2, weaponData.stat2Trait, weaponData.stat3, weaponData.stat3Trait, enemy1, enemy1Trait, enemy2, enemy2Trait, enemy3, enemy3Trait, enemy4, enemy4Trait);
                 enemies[0].querySelector('div[class*="chance-winning"]').innerText = 'Win ' + chances[0]
                 enemies[1].querySelector('div[class*="chance-winning"]').innerText = 'Win ' + chances[1]
                 enemies[2].querySelector('div[class*="chance-winning"]').innerText = 'Win ' + chances[2]
